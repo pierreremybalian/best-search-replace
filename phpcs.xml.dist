@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ruleset name="Best Search Replace">
+    <description>WordPress coding standards for Best Search Replace.</description>
+
+    <file>.</file>
+
+    <exclude-pattern>/dev/*</exclude-pattern>
+    <exclude-pattern>/node_modules/*</exclude-pattern>
+    <exclude-pattern>/vendor/*</exclude-pattern>
+    <exclude-pattern>*.min.js</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+    <arg name="parallel" value="8"/>
+
+    <rule ref="WordPress">
+        <!--
+        House style, shared with the author's other plugins: four-space indent,
+        multi-line array arguments opened on the call line, and short associative
+        arrays kept on one line. Purely cosmetic; no security sniff is excluded here.
+        -->
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+        <exclude name="Universal.WhiteSpace.PrecisionAlignment"/>
+        <exclude name="WordPress.Arrays.ArrayIndentation"/>
+        <exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
+        <exclude name="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments"/>
+        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
+
+        <!--
+        This plugin is a direct-database tool: it reads and rewrites arbitrary
+        tables by design, and its results must never come from an object cache.
+        The prepared-statement and input-validation sniffs stay enabled.
+        -->
+        <exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery"/>
+        <exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching"/>
+
+        <!-- Readability preferences, not correctness. -->
+        <exclude name="Universal.Operators.DisallowShortTernary"/>
+        <exclude name="Universal.NamingConventions.NoReservedKeywordParameterNames"/>
+
+        <!--
+        Every function and property here carries a native PHP type declaration, so a
+        mandatory @param/@return/@var restating that type adds no information. Anything
+        whose behaviour is not obvious from its signature does have a docblock, and the
+        doc sniffs that catch real mistakes (wrong parameter names, wrong type hints,
+        missing @throws, malformed comments) all stay enabled.
+        -->
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+
+        <!-- Two small value types live beside their only consumer, in the same file. -->
+        <exclude name="Generic.Files.OneObjectStructurePerFile"/>
+    </rule>
+
+    <!--
+    Templates are included from BESR_Admin::render_page(), so their variables are
+    function-scoped rather than global; phpcs cannot see that from the file alone.
+    -->
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound">
+        <exclude-pattern>/templates/*</exclude-pattern>
+    </rule>
+
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="best-search-replace"/>
+            </property>
+        </properties>
+    </rule>
+
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <property name="prefixes" type="array">
+                <element value="besr"/>
+                <element value="BESR"/>
+            </property>
+        </properties>
+    </rule>
+
+    <config name="minimum_wp_version" value="6.2"/>
+
+    <rule ref="PHPCompatibilityWP"/>
+    <config name="testVersion" value="7.4-"/>
+</ruleset>
