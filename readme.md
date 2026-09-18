@@ -78,7 +78,7 @@ Three tables: `{prefix}besr_runs`, `{prefix}besr_matches` (one row per matched c
 
 ## Development
 
-A throwaway WordPress lives in `dev/` (Docker; on this machine colima + standalone `docker-compose`):
+A throwaway WordPress lives in `dev/`. It needs Docker and nothing else: no local PHP, MySQL or WordPress. Use `docker compose` or the standalone `docker-compose`, whichever your setup has.
 
 ```
 cd dev && ./bootstrap.sh              # http://besr.localhost:8081/wp-admin  admin / admin
